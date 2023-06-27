@@ -1,11 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+
+  <!--Include these script sources for Leap Motion Device functionality 
+  (some features may need to include different versions of the library such as /leap-1.1.1,
+  or require other plugins and gesture libraries)-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
+        <script src="https://js.leapmotion.com/leap-0.6.4.js"></script>
+        <script src="https://js.leapmotion.com/leap-plugins-0.1.11.js"></script>
+        <script src="https://js.leapmotion.com/leap.rigged-hand-0.1.7.js"></script>
 </head>
-<body>
+ <div>
+ <nav>
+         <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="draw.html">Draw</a></li>
+          <li><a href="gallery.html">Gallery</a></li> 
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+ </div>
+<main>
+  <!--Creates display box for frame data...(body onload"init"(); loads the display box for frame data) -->
+  <body onload="init();">
     
+    <!-- Need to include this external script for getting frame data and returning it in the frame data display
+    ("same script as the one to connect the controller and the scroll feature")
+    -->
+    <script src="script.js"></script>
+
+    <!--style setup for a box with frame data in the upper right-hand corner.-->
+      <style>
+    #hand-position-display {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+  </style>
+
+  <!-- Displays the style setup for frame data in the upper right-hand corner.
+  ("Important to include this <div id") -->
+  <div id="hand-position-display"></div>
+
+    <h1>Leap Motion Interactive Website</h1>
+
+    <br>
+
+    <section>
+      <h2>Test Connection for device.</h2>
+    <p>Sample website to test leap motion device connection and device interaction with the website.</p>
+    </section>
+
+    <section>
+      <!--sources for webpage images-->
+      <h3>Once connection is made, enter correct code or file to estabilish tracking on the webpage.</h3>
+      <a href="draw.html"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV_PRfGaVaxo08ogKvu8KMJPcmwhhC8gOdgz3XYak2aM8-RkG3qfLHOyCAcuHQRkiV3zk&usqp=CAU" width="400" height="200"  alt="picture of hands in front of computer screen with augmented set of hands displayed inside the computer screen"></img></a>
+      <br>
+      <a href="draw.html"><img src="https://i.ytimg.com/vi/UqNq0T0Le9c/maxresdefault.jpg" width="500" height="500" alt="Picture of leapmotion drawing application in unity"></a>
+      <br>
+      <a href="draw.html"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPscg_SM4zq90rliGDq0rua3n0uni59fh4Ig&usqp=CAU" height="500" width="300"></a>
+    </section>
+
+<!--Script for connecting controller and adding scroll feature to webpage.-->
+    <script>
+// Create the controller object
+var controller = new Leap.Controller();
+
+// Define the variable to store the scroll threshold
+var scrollThreshold = .9;
+
+// Define a variable to track the previous frame's hand position
+var previousHandPosition;
+
+// Connect to the Leap Motion Controller
+controller.connect();
+
+// Event listener for the frame data
+controller.on('frame', function(frame) {
+  // Check if any hands are present in the current frame
+  if (frame.hands.length > 0) {
+    // Get the first hand in the frame
+    var hand = frame.hands[0];
+
+    // Check if the previous hand position is defined
+    if (previousHandPosition) {
+      // Calculate the vertical movement distance between the current and previous hand positions
+      var verticalMovement = hand.palmPosition[1] - previousHandPosition[1];
+      
+      // Check if the vertical movement exceeds the scroll threshold
+      if (Math.abs(verticalMovement) > scrollThreshold) {
+        // Scroll the webpage based on the direction of the movement
+        window.scrollBy(0, -verticalMovement);
+      }
+    }
+    // Store the current hand position as the previous hand position for the next frame
+    previousHandPosition = hand.palmPosition; 
+  }
+});  
+// display updates for hand-position frames
+function updateHandPositionDisplay(handPosition) {
+  var displayElement = document.getElementById('hand-position-display');
+
+  // Format the hand position data
+  var formattedPosition = 'X: ' + handPosition[0].toFixed(2) + '<br>' +
+                          'Y: ' + handPosition[1].toFixed(2) + '<br>' +
+                          'Z: ' + handPosition[2].toFixed(2);
+
+  // Update the display content
+  displayElement.innerHTML = formattedPosition;
+}
+// Event listener for the controller connection
+controller.on('connect', function() {
+  console.log('Leap Motion Controller connected');
+});    
+</script>
+<!-- Ridged hands "displays hands on screen"-->
+  <script>
+      (window.controller = new Leap.Controller)
+        .use('riggedHand', {
+          boneLabels: function(boneMesh, leapHand) {
+           
+          }
+      })
+        .connect()
+  </script>
 </body>
+</main>
+<footer>KSU-CMST 2023</footer>
 </html>
