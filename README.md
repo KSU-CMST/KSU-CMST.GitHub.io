@@ -7,4 +7,4 @@ Leap Motion Quick Start Guide:
 Orion V.3 Software Download Link:
 https://developer.leapmotion.com/releases/leap-motion-orion-321-39frn-3b659
 
-Main Demo: https://ksu-cmst.github.io/index.html
+Main Demo:  https://ksu-cmst.github.io/index.html
